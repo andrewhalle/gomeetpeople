@@ -12,7 +12,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True)
     active = db.Column(db.Boolean)
-    location = db.Column(db.String)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
 
     def __repr__(self):
         return "<User: %r>" % self.username
@@ -31,19 +32,33 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # TODO include username in login params
     if request.method == "GET":
         session["logged_in"] = False
         return render_template("login.html")
     else:
         session["logged_in"] = True
+        session["username"] = request.form["username"]
         return redirect(url_for("index"))
 
 # Backend calls
+@app.route("/api/location", methods=["POST"])
+def api_location():
+    if session.get("logged_in"):
+        # TODO
+        return
+    else:
+        # TODO
+        return
+    
 @app.route("/api/", methods=["GET"])
 def api_index():
     if session.get("logged_in"):
-        users = [u.as_json() for u in User.query.all()]
-        response = {"type": "userlist", "users": users}
+        curr_user = User.query.filter_by(username=session.get("username")).first()
+        users = User.query.all()
+        #TODO filter by radius users = User.query.filter_by(latitude=SOME_NUMBER, longitude=SOME_NUMBER) TODO exclude current logged in user
+        returnable = [{"username": u.username, "lat": u.latitude, "long": u.longitude} for u in users]
+        response = {"type": "userlist", "users": returnable}
     else:
         response = {"type": "error", "message": "You must be logged in to access user data"}
     return json.dumps(response)
