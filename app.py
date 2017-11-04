@@ -26,7 +26,7 @@ class User(db.Model):
 @app.route("/", methods=["GET"])
 def index():
     if session.get("logged_in"):
-        return render_template("index.html")
+        return render_template("geolocate.html")
     else:
         return redirect(url_for("login"))
 

@@ -16,6 +16,6 @@ if dev.is_file():
     
 # Create and seed the database
 db.create_all()
-db.session.add(User(username="andrew", latitude=10, longitude=20, active=True))
-db.session.add(User(username="chris", latitude=32.4, longitude=10.2, active=True))
+db.session.add(User(username="andrew", latitude=37.871853, longitude=-122.258423, active=True))
+db.session.add(User(username="chris", latitude=37.873, longitude=-122.26, active=True))
 db.session.commit()

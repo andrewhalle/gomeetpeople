@@ -42,17 +42,22 @@
             type: 'GET',
             url: 'http://localhost:5000/api/',
           success: function (data) {
+            var userlist = JSON.parse(data);
             console.log(data);
-              if (data['gps_position_longitude'] != null && data['gps_position_latitude'] != null ) {
-                var latlng = new google.maps.LatLng(data['gps_position_longitude'], data['gps_position_latitude']);
+            console.log(userlist.users);
+            for (i = 0; i < userlist.users.length; i++) {
+              if (userlist.users[i].lat != null && userlist.users[i].long != null) {
+                var latlng = new google.maps.LatLng(userlist.users[i].lat, userlist.users[i].long);
+                console.log(latlng);
                 var marker = new google.maps.Marker({
-                position: latlng, 
-                map: map});
-              };
-            },
+                  position: latlng, 
+                  map: map
+                });
+              }
+            };
+          },
           error: function(data) {
-              $("#result").html(data);
-              console.log(data)
+            $("#result").html(data);
           }
         });
       }
@@ -92,25 +97,6 @@
           zoom: 17,
           mapTypeId: 'hybrid'
         });
-        // Create a <script> tag and set the USGS URL as the source.
-        var script = document.createElement('script');
-        // This example uses a local copy of the GeoJSON stored at
-        // http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojsonp
-        script.src = updateData();
-        document.getElementsByTagName('head')[0].appendChild(script);
-
-        // Loop through the results array and place a marker for each
-        // set of coordinates.
-        window.eqfeed_callback = function(results) {
-          for (var i = 0; i < results.features.length; i++) {
-            var coords = results.features[i].geometry.coordinates;
-            var latLng = new google.maps.LatLng(coords[1],coords[0]);
-            var marker = new google.maps.Marker({
-              position: latLng,
-              map: map
-            });
-          }
-        }
 
         infoWindow = new google.maps.InfoWindow;
 

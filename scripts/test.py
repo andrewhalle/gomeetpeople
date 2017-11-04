@@ -19,8 +19,8 @@ class TestGetUsers(unittest.TestCase):
         app.app.testing = True
         self.app = app.app.test_client()
         app.db.create_all()
-        app.db.session.add(app.User(username="andrew", latitude=10, longitude=20, active=True))
-        app.db.session.add(app.User(username="chris", latitude=20, longitude=10, active=True))
+        db.session.add(User(username="andrew", latitude=37.871853, longitude=-122.258423, active=True))
+        db.session.add(User(username="chris", latitude=37.873, longitude=-122.26, active=True))
         app.db.session.commit()
             
     def test_not_logged_in(self):
