@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, session, request
 from flask_sqlalchemy import SQLAlchemy
 import json
+import math
 
 app = Flask(__name__)
 app.secret_key = b"Q\xc0Z?\x9ar'\xe1\xe4$\x99S\xa1\xbfA\x91i\xd60C\x19\x9d\xed|"
@@ -22,6 +23,9 @@ class User(db.Model):
         dct = {"id": self.id, "username": self.username, "active": self.active, "location": self.location}
         return json.dumps(dct)
 
+    def distance(self, user):
+        return math.sqrt((self.latitude - user.latitude)**2 + (self.longitude - user.longitude)**2)
+    
 # Frontend calls
 @app.route("/", methods=["GET"])
 def index():
@@ -55,8 +59,8 @@ def api_location():
 def api_index():
     if session.get("logged_in"):
         curr_user = User.query.filter_by(username=session.get("username")).first()
-        users = User.query.all()
-        #TODO filter by radius users = User.query.filter_by(latitude=SOME_NUMBER, longitude=SOME_NUMBER) TODO exclude current logged in user
+        users = User.query.filter(User.username != curr_user.username, User.active == True)
+        users = [u for u in users if u.distance(curr_user) <= 15] # TODO replace fixed radius
         returnable = [{"username": u.username, "lat": u.latitude, "long": u.longitude} for u in users]
         response = {"type": "userlist", "users": returnable}
     else:

@@ -21,6 +21,8 @@ class TestGetUsers(unittest.TestCase):
         app.db.create_all()
         app.db.session.add(app.User(username="andrew", latitude=10, longitude=20, active=True))
         app.db.session.add(app.User(username="chris", latitude=20, longitude=10, active=True))
+        app.db.session.add(app.User(username="anna", latitude=100, longitude=100, active=True))
+        app.db.session.add(app.User(username="michelle", latitude=10.1, longitude=20.1, active=False))
         app.db.session.commit()
             
     def test_not_logged_in(self):
@@ -30,7 +32,11 @@ class TestGetUsers(unittest.TestCase):
     def test_get_users(self):
         self.log_in()
         rv = self.app.get("/api/")
-        assert b'andrew' in rv.data and b'chris' in rv.data
+        print(rv.data)
+        assert b'andrew' not in rv.data
+        assert b'chris' in rv.data
+        assert b'anna' not in rv.data
+        assert b'michelle' not in rv.data
 
     def tearDown(self):
         app.db.session.remove()
