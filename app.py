@@ -53,9 +53,9 @@ def api_location():
         curr_user.latitude = request.form["latitude"]
         curr_user.longitude = request.form["longitude"]
         session.commit()
-        return redirect(url_for("index"))
+        return True
     else:
-        return redirect(url_for("login"))
+        return False
     
 @app.route("/api/", methods=["GET"])
 def api_index():
