@@ -37,7 +37,32 @@ class TestGetUsers(unittest.TestCase):
         assert b'chris' in rv.data
         assert b'anna' not in rv.data
         assert b'michelle' not in rv.data
+        
+    def tearDown(self):
+        app.db.session.remove()
+        app.db.drop_all()
 
+class TestSetLocation(unittest.TestCase):
+    def log_in(self):
+        self.app.post("/login", data={"username": "andrew"})
+        
+    def setUp(self):
+        app.app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
+        app.app.testing = True
+        self.app = app.app.test_client()
+        app.db.create_all()
+        app.db.session.add(app.User(username="andrew", latitude=10, longitude=20, active=True))
+        app.db.session.add(app.User(username="chris", latitude=20, longitude=10, active=True))
+        app.db.session.add(app.User(username="anna", latitude=100, longitude=100, active=True))
+        app.db.session.add(app.User(username="michelle", latitude=10.1, longitude=20.1, active=False))
+        app.db.session.commit()
+
+    def test_location_set(self):
+        # TODO
+
+    def test_matching(self):
+        # TODO
+        
     def tearDown(self):
         app.db.session.remove()
         app.db.drop_all()
