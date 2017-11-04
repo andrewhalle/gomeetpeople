@@ -48,12 +48,14 @@ def login():
 # Backend calls
 @app.route("/api/location", methods=["POST"])
 def api_location():
-    if session.get("logged_in"):
-        # TODO
-        return
+    if session["logged_in"]:
+        curr_user = User.query.filter_by(username=session.get("username")).first()
+        curr_user.latitude = request.form["latitude"]
+        curr_user.longitude = request.form["longitude"]
+        session.commit()
+        return redirect(url_for("index"))
     else:
-        # TODO
-        return
+        return redirect(url_for("login"))
     
 @app.route("/api/", methods=["GET"])
 def api_index():
