@@ -15,6 +15,7 @@ class User(db.Model):
     active = db.Column(db.Boolean)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    matched_id = db.Column(db.Integer)
 
     def __repr__(self):
         return "<User: %r>" % self.username
@@ -52,7 +53,14 @@ def api_location():
         curr_user = User.query.filter_by(username=session.get("username")).first()
         curr_user.latitude = request.form["latitude"]
         curr_user.longitude = request.form["longitude"]
-        session.commit()
+        users = User.query.filter(User.username != curr_user.username, User.active == True)
+        matched_user = min([u for u in users if u.distance(curr_user) <= 5], key=lambda x: x.distance(curr_user)) # TODO replace fixed radius
+        if matched_user:
+            matched_user.matched_id = curr_user.id
+            curr_user.matched_id = matched_user.id
+            db.session.add(matched_user)
+        db.session.add(curr_user)
+        db.session.commit()
         return True
     else:
         return False
