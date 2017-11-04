@@ -59,9 +59,11 @@ class TestSetLocation(unittest.TestCase):
 
     def test_location_set(self):
         # TODO
+        return
 
     def test_matching(self):
         # TODO
+        return
         
     def tearDown(self):
         app.db.session.remove()
