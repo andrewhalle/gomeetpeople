@@ -2,6 +2,9 @@ from flask import Flask, render_template, url_for, redirect, session, request
 from flask_sqlalchemy import SQLAlchemy
 import json
 import math
+import datetime
+import time
+import threading
 
 app = Flask(__name__)
 app.secret_key = b"Q\xc0Z?\x9ar'\xe1\xe4$\x99S\xa1\xbfA\x91i\xd60C\x19\x9d\xed|"
@@ -12,6 +15,7 @@ db = SQLAlchemy(app)
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True)
+    last_request = db.Column(db.DateTime)
     active = db.Column(db.Boolean)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
@@ -26,7 +30,36 @@ class User(db.Model):
 
     def distance(self, user):
         return math.sqrt((self.latitude - user.latitude)**2 + (self.longitude - user.longitude)**2)
-    
+
+# App startup
+@app.before_first_request
+def start_matcher_and_sanitizer():
+    def matcher_and_sanitizer():
+        while True:
+            expired_users = User.query.filter(User.last_request < datetime.datetime.now() - datetime.timedelta(minutes=5)).all()
+            for user in expired_users:
+                user.active = False
+                if user.matched_id != None:
+                    matched_user = User.query.filter_by(id=user.matched_id).first()
+                    matched_user.matched_id = None
+                    db.session.add(matched_user)
+                db.session.commit()
+
+            active_users = User.query.filter_by(active=True).all()
+            for user in active_users:
+                if user.matched_id != None:
+                    closest_user = min(active_users, key=lambda u: u.distance(user))
+                    if closest_user.distance(user) < 5: # TODO replace with dynamic matching radius
+                        user.matched_id = closest_user.id
+                        closest_user.matched_id = user.id
+                        db.session.add(closest_user)
+                    db.session.add(user)
+                    db.session.commit()
+            time.sleep(10)
+
+    thread = threading.Thread(target=matcher_and_sanitizer)
+    thread.start()
+        
 # Frontend calls
 @app.route("/", methods=["GET"])
 def index():
@@ -53,12 +86,7 @@ def api_location():
         curr_user = User.query.filter_by(username=session.get("username")).first()
         curr_user.latitude = request.form["latitude"]
         curr_user.longitude = request.form["longitude"]
-        users = User.query.filter(User.username != curr_user.username, User.active == True)
-        matched_user = min([u for u in users if u.distance(curr_user) <= 5], key=lambda x: x.distance(curr_user)) # TODO replace fixed radius
-        if matched_user:
-            matched_user.matched_id = curr_user.id
-            curr_user.matched_id = matched_user.id
-            db.session.add(matched_user)
+        curr_user.last_request = datetime.datetime.now()
         db.session.add(curr_user)
         db.session.commit()
         return True
@@ -69,6 +97,7 @@ def api_location():
 def api_index():
     if session.get("logged_in"):
         curr_user = User.query.filter_by(username=session.get("username")).first()
+        curr_user.last_request = datetime.datetime.now()
         users = User.query.filter(User.username != curr_user.username, User.active == True)
         users = [u for u in users if u.distance(curr_user) <= 15] # TODO replace fixed radius
         returnable = [{"username": u.username, "lat": u.latitude, "long": u.longitude} for u in users]
