@@ -81,6 +81,18 @@
         blurUI.style.padding = '10px 100px 100px 100px';
         blurUI.style.backgroundColor = 'rgba(0,0,0,0.75)';
         blurDiv.appendChild(blurUI);
+
+        blurUI.addEventListener('click', function() {
+          var blurMapDiv = document.createElement('div');
+          var blur = new BlurMap(blurMapDiv, map);
+          blurMapDiv.index = 1;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].pop(blurMapDiv);
+
+          var badgesViewDiv = document.createElement('div');
+          var badges = new BadgesView(badgesViewDiv, map);
+          badgesViewDiv.index = 9999;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].pop(badgesViewDiv);
+        });
       }
 
       function BadgesView(badgesDiv, map) {
