@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, session, request
 from flask_sqlalchemy import SQLAlchemy
 import json
+import math
 
 app = Flask(__name__)
 app.secret_key = b"Q\xc0Z?\x9ar'\xe1\xe4$\x99S\xa1\xbfA\x91i\xd60C\x19\x9d\xed|"
@@ -14,6 +15,7 @@ class User(db.Model):
     active = db.Column(db.Boolean)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    matched_id = db.Column(db.Integer)
 
     def __repr__(self):
         return "<User: %r>" % self.username
@@ -22,6 +24,9 @@ class User(db.Model):
         dct = {"id": self.id, "username": self.username, "active": self.active, "location": self.location}
         return json.dumps(dct)
 
+    def distance(self, user):
+        return math.sqrt((self.latitude - user.latitude)**2 + (self.longitude - user.longitude)**2)
+    
 # Frontend calls
 @app.route("/", methods=["GET"])
 def index():
@@ -44,19 +49,28 @@ def login():
 # Backend calls
 @app.route("/api/location", methods=["POST"])
 def api_location():
-    if session.get("logged_in"):
-        # TODO
-        return
+    if session["logged_in"]:
+        curr_user = User.query.filter_by(username=session.get("username")).first()
+        curr_user.latitude = request.form["latitude"]
+        curr_user.longitude = request.form["longitude"]
+        users = User.query.filter(User.username != curr_user.username, User.active == True)
+        matched_user = min([u for u in users if u.distance(curr_user) <= 5], key=lambda x: x.distance(curr_user)) # TODO replace fixed radius
+        if matched_user:
+            matched_user.matched_id = curr_user.id
+            curr_user.matched_id = matched_user.id
+            db.session.add(matched_user)
+        db.session.add(curr_user)
+        db.session.commit()
+        return True
     else:
-        # TODO
-        return
+        return False
     
 @app.route("/api/", methods=["GET"])
 def api_index():
     if session.get("logged_in"):
         curr_user = User.query.filter_by(username=session.get("username")).first()
-        users = User.query.all()
-        #TODO filter by radius users = User.query.filter_by(latitude=SOME_NUMBER, longitude=SOME_NUMBER) TODO exclude current logged in user
+        users = User.query.filter(User.username != curr_user.username, User.active == True)
+        users = [u for u in users if u.distance(curr_user) <= 15] # TODO replace fixed radius
         returnable = [{"username": u.username, "lat": u.latitude, "long": u.longitude} for u in users]
         response = {"type": "userlist", "users": returnable}
     else:
