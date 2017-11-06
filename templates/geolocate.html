@@ -5,23 +5,33 @@
     <title>Geolocation</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
       #map {
         height: 100%;
       }
-      /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
       }
+
+      @-webkit-keyframes animatetop {
+        from {top:-300px; opacity:0} 
+        to {top:0; opacity:1}
+      }
+
+      @keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+      }
     </style>
   </head>
   
   <body>
-    <div id="map"></div>
+    <div class="wrapper">
+      <div id="map" style='width: 100%; height: 100%;'></div>
+    </div>
 
     <script
     src="http://code.jquery.com/jquery-3.2.1.js"
@@ -45,7 +55,9 @@
                 var latlng = new google.maps.LatLng(userlist.users[i].lat, userlist.users[i].long);
                 console.log(latlng);
                 var marker = new google.maps.Marker({
-                  position: latlng, 
+                  type: 'user',
+                  position: latlng,
+                  // icon: 'position.png', 
                   map: map
                 });
               }
@@ -58,13 +70,76 @@
       }
       setInterval(updateData, 10000);
 
+      function BlurMap(blurDiv, map) {
+        var blurUI = document.createElement('div');
+        blurUI.style.display = 'absolute';
+        blurUI.style.top = '0%';
+        blurUI.style.left = '0%';
+        blurUI.style.position = 'fixed';
+        blurUI.style.width = '100%';
+        blurUI.style.height = '100%';
+        blurUI.style.padding = '10px 100px 100px 100px';
+        blurUI.style.backgroundColor = 'rgba(0,0,0,0.75)';
+        blurDiv.appendChild(blurUI);
+
+        blurUI.addEventListener('click', function() {
+          var blurMapDiv = document.createElement('div');
+          var blur = new BlurMap(blurMapDiv, map);
+          blurMapDiv.index = 1;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].pop(blurMapDiv);
+
+          var badgesViewDiv = document.createElement('div');
+          var badges = new BadgesView(badgesViewDiv, map);
+          badgesViewDiv.index = 9999;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].pop(badgesViewDiv);
+        });
+      }
+
+      function BadgesView(badgesDiv, map) {
+        // var badgesUI = document.createElement('div');
+        // badgesUI.style.display = 'absolute';
+        // badgesUI.style.position = 'fixed';
+        // badgesUI.style.color = 'white';
+        // badgesUI.style.borderRadius = '10px';  
+        // badgesUI.style.padding = '10px 100px 100px 100px';
+        // badgesUI.style.width = '40%';
+        // badgesUI.style.height = '40%';
+        // badgesUI.style.top = '25%';
+        // badgesUI.style.left = '25%';
+        // badgesUI.innerHTML = 'Badges';
+        // badgesUI.style.fontSize = '48px';
+        // badgesUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
+        // badgesUI.style.backgroundColor = '#3DB4CF';
+        // badgesUI.style.textAlign = 'center';
+        // badgesDiv.appendChild(badgesUI);
+
+        var badge1 = document.createElement('IMG');
+        // badge1.style.display = 'relative';
+        badge1.style.padding = '100px 0px 0px 0px'; 
+        badge1.setAttribute("src", "1.png");
+        badge1.setAttribute("width", "32%");
+        badgesDiv.appendChild(badge1);
+
+        var badge2 = document.createElement('IMG');
+        // badge2.style.display = 'relative';
+        badge2.style.padding = '100px 0px 0px 0px'; 
+        badge2.setAttribute("src", "2.png");
+        badge2.setAttribute("width", "32%");
+        badgesDiv.appendChild(badge2);
+
+        var badge3 = document.createElement('IMG');
+        // badge3.style.display = 'relative';
+        badge3.style.padding = '100px 0px 0px 0px'; 
+        badge3.setAttribute("src", "2.png");
+        badge3.setAttribute("width", "32%");
+        badgesDiv.appendChild(badge3);
+      }
+
       function CenterControl(controlDiv, map) {
         var controlUI = document.createElement('div');
         controlUI.style.backgroundColor = '#3DB4CF';
         controlUI.style.border = '2px solid #3DB4CF';
-        controlUI.style.borderRadius = '5px';
-        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-        controlUI.style.cursor = 'pointer';
+        controlUI.style.borderRadius = '5px';        // 
         controlUI.style.marginTop = '9px';
         controlUI.style.textAlign = 'center';
         $(controlUI).hover(
@@ -75,9 +150,8 @@
         function onMouseLeave() {
             this.style.backgroundColor = '#3DB4CF';
             this.style.border = '2px solid #3DB4CF';
-        }
-        );
-        controlUI.title = 'Profile';
+        });
+        controlUI.title = 'Badges';
         controlDiv.appendChild(controlUI);
 
         var controlText = document.createElement('div');
@@ -87,12 +161,19 @@
         controlText.style.lineHeight = '28px';
         controlText.style.paddingLeft = '5px';
         controlText.style.paddingRight = '5px';
-        controlText.innerHTML = 'Profile';
+        controlText.innerHTML = 'Badges';
         controlUI.appendChild(controlText);
 
-        // Setup the click event listeners: simply set the map to Chicago.
         controlUI.addEventListener('click', function() {
-          window.location.href = "layout.html";
+          var blurMapDiv = document.createElement('div');
+          var blur = new BlurMap(blurMapDiv, map);
+          blurMapDiv.index = 1;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(blurMapDiv);
+
+          var badgesViewDiv = document.createElement('div');
+          var badges = new BadgesView(badgesViewDiv, map);
+          badgesViewDiv.index = 9999;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].push(badgesViewDiv);
         });
       }
 
@@ -103,9 +184,6 @@
           mapTypeId: 'hybrid'
         });
 
-        infoWindow = new google.maps.InfoWindow;
-
-        // Try HTML5 geolocation.
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             var pos = {
@@ -113,16 +191,22 @@
               lng: position.coords.longitude
             };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
+            var latlng = new google.maps.LatLng(pos.lat, pos.lng);
+
+            var myMarker = new google.maps.Marker({
+              type: 'me',
+              position: latlng,
+              // icon: 'my_position.png',
+              map: map
+            });
+
             map.setCenter(pos);
           }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
+            handleLocationError(true, myMarker, map.getCenter());
           });
         } else {
           // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
+          handleLocationError(false, myMarker, map.getCenter());
         }
 
         var centerControlDiv = document.createElement('div');
