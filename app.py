@@ -77,6 +77,11 @@ def login():
     else:
         session["logged_in"] = True
         session["username"] = request.form["username"]
+        curr_user = User.query.filter_by(username=session.get("username")).first()
+        curr_user.active = True
+        curr_user.last_request = datetime.datetime.now()
+        db.session.add(curr_user)
+        db.session.commit()
         return redirect(url_for("index"))
 
 # Backend calls
