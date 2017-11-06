@@ -96,37 +96,40 @@
       }
 
       function BadgesView(badgesDiv, map) {
-        var badgesUI = document.createElement('div');
-        badgesUI.style.display = 'absolute';
-        badgesUI.style.position = 'fixed';
-        badgesUI.style.color = 'white';
-        badgesUI.style.borderRadius = '10px';  
-        badgesUI.style.padding = '10px 100px 100px 100px';
-        badgesUI.style.width = '40%';
-        badgesUI.style.height = '40%';
-        badgesUI.style.top = '25%';
-        badgesUI.style.left = '25%';
-        badgesUI.innerHTML = 'Badges';
-        badgesUI.style.fontSize = '48px';
-        badgesUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
-        badgesUI.style.backgroundColor = '#3DB4CF';
-        badgesUI.style.textAlign = 'center';
-        badgesDiv.appendChild(badgesUI);
+        // var badgesUI = document.createElement('div');
+        // badgesUI.style.display = 'absolute';
+        // badgesUI.style.position = 'fixed';
+        // badgesUI.style.color = 'white';
+        // badgesUI.style.borderRadius = '10px';  
+        // badgesUI.style.padding = '10px 100px 100px 100px';
+        // badgesUI.style.width = '40%';
+        // badgesUI.style.height = '40%';
+        // badgesUI.style.top = '25%';
+        // badgesUI.style.left = '25%';
+        // badgesUI.innerHTML = 'Badges';
+        // badgesUI.style.fontSize = '48px';
+        // badgesUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
+        // badgesUI.style.backgroundColor = '#3DB4CF';
+        // badgesUI.style.textAlign = 'center';
+        // badgesDiv.appendChild(badgesUI);
 
         var badge1 = document.createElement('IMG');
         // badge1.style.display = 'relative';
+        badge1.style.padding = '100px 0px 0px 0px'; 
         badge1.setAttribute("src", "1.png");
         badge1.setAttribute("width", "32%");
         badgesDiv.appendChild(badge1);
 
         var badge2 = document.createElement('IMG');
         // badge2.style.display = 'relative';
+        badge2.style.padding = '100px 0px 0px 0px'; 
         badge2.setAttribute("src", "2.png");
         badge2.setAttribute("width", "32%");
         badgesDiv.appendChild(badge2);
 
         var badge3 = document.createElement('IMG');
         // badge3.style.display = 'relative';
+        badge3.style.padding = '100px 0px 0px 0px'; 
         badge3.setAttribute("src", "2.png");
         badge3.setAttribute("width", "32%");
         badgesDiv.appendChild(badge3);
