@@ -103,10 +103,14 @@ def api_index():
     if session.get("logged_in"):
         curr_user = User.query.filter_by(username=session.get("username")).first()
         curr_user.last_request = datetime.datetime.now()
-        users = User.query.filter(User.username != curr_user.username, User.active == True)
-        users = [u for u in users if u.distance(curr_user) <= 15] # TODO replace fixed radius
-        returnable = [{"username": u.username, "lat": u.latitude, "long": u.longitude} for u in users]
-        response = {"type": "userlist", "users": returnable}
+        if curr_user.matched_id:
+            matched_user = User.query.filter_by(id=curr_user.matched_id).first()
+            response = {"type":"matchedUser", "username": matched_user.username, "lat": matched_user.latitude, "long": matched_user.longitude}
+        else:
+            users = User.query.filter(User.username != curr_user.username, User.active == True)
+            users = [u for u in users if u.distance(curr_user) <= 15] # TODO replace fixed radius
+            returnable = [{"username": u.username, "lat": u.latitude, "long": u.longitude} for u in users]
+            response = {"type": "userlist", "users": returnable}
     else:
         response = {"type": "error", "message": "You must be logged in to access user data"}
     return json.dumps(response)
