@@ -5,7 +5,7 @@
     <title>Geolocation</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../static/style.css">
     <style>
       #map {
         height: 100%;
@@ -41,27 +41,41 @@
     <script>
       var map, infoWindow;
       var berkeley = {lat: 37.871853, lng: -122.258423};
+      var userlat;
+      var userlng;
 
       function updateData() {
         var feedback = $.ajax({
             type: 'GET',
             url: 'http://localhost:5000/api/',
           success: function (data) {
-            var userlist = JSON.parse(data);
-            console.log(data);
-            console.log(userlist.users);
-            for (i = 0; i < userlist.users.length; i++) {
-              if (userlist.users[i].lat != null && userlist.users[i].long != null) {
-                var latlng = new google.maps.LatLng(userlist.users[i].lat, userlist.users[i].long);
-                console.log(latlng);
-                var marker = new google.maps.Marker({
-                  type: 'user',
-                  position: latlng,
-                  // icon: 'position.png', 
-                  map: map
-                });
-              }
-            };
+            console.log(data); 
+            var input = JSON.parse(data);
+            console.log(input.type);
+            if (input.type == "userlist") {            
+              console.log(input);
+              console.log(input.users);
+              for (i = 0; i < input.users.length; i++) {
+                if (input.users[i].lat != null && input.users[i].long != null) {
+                  var latlng = new google.maps.LatLng(input.users[i].lat, input.users[i].long);
+                  var marker = new google.maps.Marker({
+                    type: 'user',
+                    position: latlng, 
+                    map: map
+                  });
+                }
+              };
+            } else if (input.type == "matchedUser") {
+              var pos = {
+                lat: input.lat,
+                lng: input.long
+              };
+
+              infoWindow = new google.maps.InfoWindow;
+              infoWindow.setPosition(pos);
+              infoWindow.setContent('This is ' + input.name + ', rating ' + input.rating + '.');
+              infoWindow.open(map);
+            }
           },
           error: function(data) {
             $("#result").html(data);
@@ -69,6 +83,15 @@
         });
       }
       setInterval(updateData, 10000);
+
+      // function matchedUser(data) {
+      //    var match = JSON.parse(data);
+      //    var name = match.username;
+      //    var rating = match.rating;
+      //    var lat = match.lat;
+      //    var lng = match.long;
+      //    //pop-up function
+      // }
 
       function BlurMap(blurDiv, map) {
         var blurUI = document.createElement('div');
@@ -363,6 +386,8 @@
             };
 
             var latlng = new google.maps.LatLng(pos.lat, pos.lng);
+            userlat = pos.lat;
+            userlng = pos.lng;
 
             var myMarker = new google.maps.Marker({
               type: 'me',
@@ -390,12 +415,17 @@
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
         infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
       }
 
     </script>
+    
+    <!-- <script async defer
+        src= "https://maps.googleapis.com/maps/api/directions/json?origin=userlatlng&destination=pairlatlng&mode=walking&key=AIzaSyAyzs5GXiEQzGtFBvzvkxkWs4i1KqXChLE">
+    </script> -->
+    
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzs5GXiEQzGtFBvzvkxkWs4i1KqXChLE&callback=initMap">
     </script>
