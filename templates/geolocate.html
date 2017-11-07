@@ -5,23 +5,33 @@
     <title>Geolocation</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
       #map {
         height: 100%;
       }
-      /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
         margin: 0;
         padding: 0;
       }
+
+      @-webkit-keyframes animatetop {
+        from {top:-300px; opacity:0} 
+        to {top:0; opacity:1}
+      }
+
+      @keyframes animatetop {
+        from {top:-300px; opacity:0}
+        to {top:0; opacity:1}
+      }
     </style>
   </head>
   
   <body>
-    <div id="map"></div>
+    <div class="wrapper">
+      <div id="map" style='width: 100%; height: 100%;'></div>
+    </div>
 
     <script
     src="http://code.jquery.com/jquery-3.2.1.js"
@@ -45,7 +55,9 @@
                 var latlng = new google.maps.LatLng(userlist.users[i].lat, userlist.users[i].long);
                 console.log(latlng);
                 var marker = new google.maps.Marker({
-                  position: latlng, 
+                  type: 'user',
+                  position: latlng,
+                  // icon: 'position.png', 
                   map: map
                 });
               }
@@ -58,15 +70,249 @@
       }
       setInterval(updateData, 10000);
 
+      function BlurMap(blurDiv, map) {
+        var blurUI = document.createElement('div');
+        blurUI.style.display = 'relative';
+        blurUI.style.top = '0%';
+        blurUI.style.left = '0%';
+        blurUI.style.position = 'fixed';
+        blurUI.style.width = '100%';
+        blurUI.style.height = '100%';
+        blurUI.style.backgroundColor = 'rgba(0,0,0,0.75)';
+        blurDiv.appendChild(blurUI);
+
+        blurUI.addEventListener('click', function() {
+          var blurMapDiv = document.createElement('div');
+          var blur = new BlurMap(blurMapDiv, map);
+          blurMapDiv.index = 1;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].pop(blurMapDiv);
+
+          var badgesViewDiv = document.createElement('div');
+          var badges = new BadgesView(badgesViewDiv, map);
+          badgesViewDiv.index = 9999;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].pop(badgesViewDiv);
+        });
+      }
+
+      function BadgesView(badgesDiv, map) {
+
+        var badge1 = document.createElement('IMG');
+        badge1.style.display = 'fixed';
+        badge1.style.padding = '100px 0px 0px 0px'; 
+        badge1.setAttribute("src", "1.png");
+        badge1.setAttribute("width", "32%");
+        badgesDiv.appendChild(badge1);
+
+        var badge2 = document.createElement('IMG');
+        badge2.style.display = 'fixed';
+        badge2.style.padding = '100px 0px 0px 0px'; 
+        badge2.setAttribute("src", "2.png");
+        badge2.setAttribute("width", "32%");
+        badgesDiv.appendChild(badge2);
+
+        var badge3 = document.createElement('IMG');
+        badge3.style.display = 'fixed';
+        badge3.style.padding = '100px 0px 0px 0px'; 
+        badge3.setAttribute("src", "2.png");
+        badge3.setAttribute("width", "32%");
+        badgesDiv.appendChild(badge3);
+      }
+
+      function NewBadge(newBadgeDiv, map) {
+        var nbUI = document.createElement('div');
+        nbUI.style.display = 'absolute';
+        nbUI.style.position = 'fixed';
+        nbUI.style.color = 'white';
+        nbUI.style.borderRadius = '10px';  
+        nbUI.style.padding = '0px 100px 100px 100px';
+        nbUI.style.width = '40%';
+        nbUI.style.height = '40%';
+        nbUI.style.top = '25%';
+        nbUI.style.left = '25%';
+        nbUI.innerHTML = 'NEW BADGE!';
+        nbUI.style.fontSize = '48px';
+        nbUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
+        nbUI.style.textAlign = 'center';
+        newBadgeDiv.appendChild(nbUI);
+
+        var badge = document.createElement('IMG');
+        badge.style.position = 'fixed';
+        badge.style.top = "25%";
+        badge.style.left = "25%";
+        badge.style.padding = '50px 100px 100px 150px';
+        badge.setAttribute("src", "3.png");
+        badge.setAttribute("width", "32%");
+        newBadgeDiv.appendChild(badge);
+      }
+
+      function TopicsView(topicViewDiv, map) {
+        var topicsUI = document.createElement('div');
+        topicsUI.style.display = 'absolute';
+        topicsUI.style.position = 'fixed';
+        topicsUI.style.color = 'white';
+        topicsUI.style.borderRadius = '10px';  
+        topicsUI.style.padding = '10px 100px 100px 100px';
+        topicsUI.style.width = '40%';
+        topicsUI.style.height = '40%';
+        topicsUI.style.top = '25%';
+        topicsUI.style.left = '25%';
+        topicsUI.innerHTML = 'Topic';
+        topicsUI.style.fontSize = '48px';
+        topicsUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
+        topicsUI.style.backgroundColor = '#3DB4CF';
+        topicsUI.style.textAlign = 'center';
+        topicViewDiv.appendChild(topicsUI);
+
+        var agreeText = document.createElement('p');
+        agreeText.style.display = 'absolute';
+        agreeText.style.position = 'fixed';
+        agreeText.style.color = 'white';
+        agreeText.style.top = '25%';
+        agreeText.style.left = '30%';
+        agreeText.style.fontSize = '20px';
+        agreeText.innerHTML = '<br><br><br>You and Andrew both agree on <u>abortion laws</u>.';
+        agreeText.style.textAlign = 'center';
+        topicViewDiv.appendChild(agreeText);
+
+        var disagreeText = document.createElement('p');
+        disagreeText.style.display = 'absolute';
+        disagreeText.style.position = 'fixed';
+        disagreeText.style.color = 'white';
+        disagreeText.style.top = '30%';
+        disagreeText.style.left = '30%';
+        disagreeText.style.fontSize = '20px';
+        disagreeText.innerHTML = '<br><br><br>However you both agree on <u>immigration laws</u>.';
+        disagreeText.style.textAlign = 'center';
+        topicViewDiv.appendChild(disagreeText);
+
+        var disagreeText = document.createElement('p');
+        disagreeText.style.display = 'absolute';
+        disagreeText.style.position = 'fixed';
+        disagreeText.style.color = 'white';
+        disagreeText.style.top = '30%';
+        disagreeText.style.left = '30%';
+        disagreeText.style.fontSize = '20px';
+        disagreeText.innerHTML = '<br><br><br>However you both agree on <u>immigration laws</u>.';
+        disagreeText.style.textAlign = 'center';
+        topicViewDiv.appendChild(disagreeText);
+
+        var article1 = document.createElement('div');
+        article1.style.display = 'absolute';
+        article1.style.position = 'fixed';
+        article1.style.backgroundColor = '#ffd24d';
+        article1.style.border = '2px solid #ffd24d';
+        article1.style.borderRadius = '5px';        // 
+        article1.style.marginTop = '9px';
+        article1.innerHTML = 'Article #1';
+        article1.style.textAlign = 'center';
+        article1.style.cursor = 'pointer';
+        article1.style.color = 'white';
+        article1.style.fontFamily = 'Roboto,Arial,sans-serif';
+        article1.style.fontSize = '12px';
+        article1.style.lineHeight = '28px';
+        article1.style.paddingLeft = '5px';
+        article1.style.paddingRight = '5px';
+        article1.style.top = '50%';
+        article1.style.left = '30%';
+        $(article1).hover(
+        function onMouseEnter() {
+            this.style.backgroundColor = 'white';
+            this.style.border = '2px solid white';
+            this.style.color = '#ffd24d';
+        },
+        function onMouseLeave() {
+            this.style.backgroundColor = '#ffd24d';
+            this.style.border = '2px solid #ffd24d';
+            this.style.color = 'white';
+        });
+        article1.title = 'Badges';
+        topicViewDiv.appendChild(article1);
+
+        article1.addEventListener('click', function() {
+          window.open("https://www.nytimes.com/2017/11/03/us/girl-cerbral-palsy-released.html?rref=collection%2Ftimestopic%2FImmigration%20and%20Emigration&action=click&contentCollection=timestopics&region=stream&module=stream_unit&version=latest&contentPlacement=2&pgtype=collection&_r=0");
+        });
+
+        var article2 = document.createElement('div');
+        article2.style.display = 'absolute';
+        article2.style.position = 'fixed';
+        article2.style.backgroundColor = '#ffd24d';
+        article2.style.border = '2px solid #ffd24d';
+        article2.style.borderRadius = '5px';        // 
+        article2.style.marginTop = '9px';
+        article2.innerHTML = 'Article #2';
+        article2.style.textAlign = 'center';
+        article2.style.color = 'white';
+        article2.style.fontFamily = 'Roboto,Arial,sans-serif';
+        article2.style.fontSize = '12px';
+        article2.style.lineHeight = '28px';
+        article2.style.cursor = 'pointer';
+        article2.style.paddingLeft = '5px';
+        article2.style.paddingRight = '5px';
+        article2.style.top = '50%';
+        article2.style.left = '41%';
+        $(article2).hover(
+        function onMouseEnter() {
+            this.style.backgroundColor = 'white';
+            this.style.border = '2px solid white';
+            this.style.color = '#ffd24d';
+        },
+        function onMouseLeave() {
+            this.style.backgroundColor = '#ffd24d';
+            this.style.border = '2px solid #ffd24d';
+            this.style.color = 'white';
+        });
+        article2.title = 'Badges';
+        topicViewDiv.appendChild(article2);
+
+        article2.addEventListener('click', function() {
+          window.open("https://www.foreignaffairs.com/articles/united-states/2017-03-31/case-against-immigration");
+        });
+
+        var doneTalking = document.createElement('div');
+        doneTalking.style.display = 'absolute';
+        doneTalking.style.position = 'fixed';
+        doneTalking.style.backgroundColor = '#ffd24d';
+        doneTalking.style.border = '2px solid #ffd24d';
+        doneTalking.style.borderRadius = '5px';        // 
+        doneTalking.style.marginTop = '9px';
+        doneTalking.innerHTML = 'Done Talking';
+        doneTalking.style.textAlign = 'center';
+        doneTalking.style.color = 'white';
+        doneTalking.style.fontFamily = 'Roboto,Arial,sans-serif';
+        doneTalking.style.fontSize = '12px';
+        doneTalking.style.lineHeight = '28px';
+        doneTalking.style.paddingLeft = '5px';
+        doneTalking.style.cursor = 'pointer';
+        doneTalking.style.paddingRight = '5px';
+        doneTalking.style.top = '60%';
+        doneTalking.style.left = '45%';
+        $(doneTalking).hover(
+        function onMouseEnter() {
+            this.style.backgroundColor = 'white';
+            this.style.border = '2px solid white';
+            this.style.color = '#ffd24d';
+        },
+        function onMouseLeave() {
+            this.style.backgroundColor = '#ffd24d';
+            this.style.border = '2px solid #ffd24d';
+            this.style.color = 'white';
+        });
+        doneTalking.title = 'Badges';
+        topicViewDiv.appendChild(doneTalking);
+
+        doneTalking.addEventListener('click', function() {
+          
+        });
+      }
+
       function CenterControl(controlDiv, map) {
         var controlUI = document.createElement('div');
         controlUI.style.backgroundColor = '#3DB4CF';
         controlUI.style.border = '2px solid #3DB4CF';
-        controlUI.style.borderRadius = '5px';
-        controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
-        controlUI.style.cursor = 'pointer';
+        controlUI.style.borderRadius = '5px';        // 
         controlUI.style.marginTop = '9px';
         controlUI.style.textAlign = 'center';
+        controlUI.style.cursor = 'pointer';
         $(controlUI).hover(
         function onMouseEnter() {
             this.style.backgroundColor = '#ffd24d';
@@ -75,9 +321,8 @@
         function onMouseLeave() {
             this.style.backgroundColor = '#3DB4CF';
             this.style.border = '2px solid #3DB4CF';
-        }
-        );
-        controlUI.title = 'Profile';
+        });
+        controlUI.title = 'Badges';
         controlDiv.appendChild(controlUI);
 
         var controlText = document.createElement('div');
@@ -87,12 +332,19 @@
         controlText.style.lineHeight = '28px';
         controlText.style.paddingLeft = '5px';
         controlText.style.paddingRight = '5px';
-        controlText.innerHTML = 'Profile';
+        controlText.innerHTML = 'Badges';
         controlUI.appendChild(controlText);
 
-        // Setup the click event listeners: simply set the map to Chicago.
         controlUI.addEventListener('click', function() {
-          window.location.href = "layout.html";
+          var blurMapDiv = document.createElement('div');
+          var blur = new BlurMap(blurMapDiv, map);
+          blurMapDiv.index = 1;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(blurMapDiv);
+
+          var badgesViewDiv = document.createElement('div');
+          var badges = new BadgesView(badgesViewDiv, map);
+          badgesViewDiv.index = 9999;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].push(badgesViewDiv);
         });
       }
 
@@ -103,9 +355,6 @@
           mapTypeId: 'hybrid'
         });
 
-        infoWindow = new google.maps.InfoWindow;
-
-        // Try HTML5 geolocation.
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             var pos = {
@@ -113,16 +362,22 @@
               lng: position.coords.longitude
             };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
+            var latlng = new google.maps.LatLng(pos.lat, pos.lng);
+
+            var myMarker = new google.maps.Marker({
+              type: 'me',
+              position: latlng,
+              // icon: 'my_position.png',
+              map: map
+            });
+
             map.setCenter(pos);
           }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
+            handleLocationError(true, myMarker, map.getCenter());
           });
         } else {
           // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
+          handleLocationError(false, myMarker, map.getCenter());
         }
 
         var centerControlDiv = document.createElement('div');
