@@ -2,7 +2,7 @@
 <html>
   
   <head>
-    <title>Geolocation</title>
+    <title>Go Meet People</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <link rel="stylesheet" href="../static/style.css">
@@ -66,6 +66,7 @@
                 }
               };
             } else if (input.type == "matchedUser") {
+              var username = input.username;
               var pos = {
                 lat: input.lat,
                 lng: input.long
@@ -73,7 +74,7 @@
 
               infoWindow = new google.maps.InfoWindow;
               infoWindow.setPosition(pos);
-              infoWindow.setContent('This is ' + input.name + ', rating ' + input.rating + '.');
+              infoWindow.setContent('<h1 id="badges" color="#3DB4CF">' + username.charAt(0).toUpperCase() + username.slice(1) + '</h1><p>' + input.rating + '</p><button onclick="MatchClick()">Connect!</button>');
               infoWindow.open(map);
             }
           },
@@ -83,15 +84,6 @@
         });
       }
       setInterval(updateData, 10000);
-
-      // function matchedUser(data) {
-      //    var match = JSON.parse(data);
-      //    var name = match.username;
-      //    var rating = match.rating;
-      //    var lat = match.lat;
-      //    var lng = match.long;
-      //    //pop-up function
-      // }
 
       function BlurMap(blurDiv, map) {
         var blurUI = document.createElement('div');
@@ -112,7 +104,7 @@
 
           var badgesViewDiv = document.createElement('div');
           var badges = new BadgesView(badgesViewDiv, map);
-          badgesViewDiv.index = 9999;
+          badgesViewDiv.index = 2;
           map.controls[google.maps.ControlPosition.TOP_CENTER].pop(badgesViewDiv);
         });
       }
@@ -328,6 +320,183 @@
         });
       }
 
+      function StarFill(name, i) {
+        return function() {
+          name.style.display = 'absolute';
+          name.style.position = 'fixed';
+          name.style.top = '42%';
+          name.style.left = i;
+          if (name.style.color == 'white') {
+            name.style.color = '#ffd24d';
+          } else {
+            name.style.color = 'white';
+          }
+        };
+      }
+
+      function RatingView(ratingDiv, map) {
+        var ratingUI = document.createElement('div');
+        ratingUI.style.display = 'absolute';
+        ratingUI.style.position = 'fixed';
+        ratingUI.style.color = 'white';
+        ratingUI.style.borderRadius = '10px';
+        ratingUI.style.padding = '10px 100px 100px 100px';
+        ratingUI.style.width = '40%';
+        ratingUI.style.height = '45%';
+        ratingUI.style.top = '20%';
+        ratingUI.style.left = '25%';
+        ratingUI.innerHTML = 'How was your chat with Andrew?';
+        ratingUI.style.fontSize = '40px';
+        ratingUI.style.backgroundColor = '#3DB4CF';
+        ratingUI.style.textAlign = 'center';
+        ratingUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
+        ratingDiv.appendChild(ratingUI);
+        var ratingstar1 = document.createElement('div');
+        var ratingstar2 = document.createElement('div');
+        var ratingstar3 = document.createElement('div');
+        var ratingstar4 = document.createElement('div');
+        var ratingstar5 = document.createElement('div');
+        //iterates through a list of five stars to display
+        var stars = [ratingstar1, ratingstar2, ratingstar3, ratingstar4, ratingstar5];
+        var leftPositions = ['35%', '42%', '49%', '56%', '63%'];
+        for (var i = 0; i < 5; i++) {
+          var name = stars[i];
+          name.className += "fa fa-star fa-5x";
+          name.style.color = "white";
+          name.style.display = 'absolute';
+          name.style.position = 'fixed';
+          name.style.top = '42%';
+          name.style.left = leftPositions[i];
+          name.addEventListener('click', StarFill(name, leftPositions[i]));
+          ratingDiv.appendChild(name);
+        }
+        var submitUI = document.createElement('div');
+        submitUI.style.display = 'absolute';
+        submitUI.style.position = 'fixed';
+        submitUI.style.color = 'white';
+        submitUI.style.backgroundColor = '#ffd24d';
+        submitUI.style.border = '8px solid #ffd24d';
+        submitUI.style.borderRadius = '6px';
+        submitUI.style.top = '55%';
+        submitUI.style.left = '47%';
+        submitUI.style.textAlign = 'left';
+        submitUI.innerHTML = 'Submit';
+        submitUI.style.fontSize = '35px';
+        $(submitUI).hover(
+        function onMouseEnter() {
+            this.style.backgroundColor = '#6fdc6f';
+            this.style.border = '8px solid #6fdc6f';
+        },
+        function onMouseLeave() {
+            this.style.backgroundColor = '#ffd24d';
+            this.style.border = '8px solid #ffd24d';
+        });
+        submitUI.title = 'Submit';
+        ratingDiv.appendChild(submitUI);
+      }
+
+      function MatchView(matchDiv, map) {
+        var matchUI = document.createElement('div');
+        matchUI.style.display = 'absolute';
+        matchUI.style.position = 'fixed';
+        matchUI.style.color = 'white';
+        matchUI.style.borderRadius = '10px';
+        matchUI.style.padding = '10px 100px 100px 100px';
+        matchUI.style.width = '40%';
+        matchUI.style.height = '20%';
+        matchUI.style.top = '30%';
+        matchUI.style.left = '25%';
+        matchUI.innerHTML = 'Matched!';
+        matchUI.style.fontSize = '48px';
+        matchUI.style.backgroundColor = '#3DB4CF';
+        matchUI.style.textAlign = 'center';
+        matchUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
+        matchDiv.appendChild(matchUI);
+        document.body.appendChild(matchDiv);
+
+        var matchPersonInfo = document.createElement('p');
+        matchPersonInfo.style.fontSize = '40px';
+        matchPersonInfo.style.position = 'fixed';
+        matchPersonInfo.style.display = 'absolute';
+        matchPersonInfo.style.color = 'white';
+        matchPersonInfo.style.top = '30%';
+        matchPersonInfo.style.left = '43%';
+        matchPersonInfo.style.textAlign = 'center';
+        matchPersonInfo.innerHTML = '<br>Andrew: 10 ft';
+        matchDiv.appendChild(matchPersonInfo);
+        document.body.appendChild(matchDiv);
+
+        var acceptUI = document.createElement('div');
+        acceptUI.style.display = 'absolute';
+        acceptUI.style.position = 'fixed';
+        acceptUI.style.color = 'white';
+        acceptUI.style.backgroundColor = '#6fdc6f';
+        acceptUI.style.border = '5px solid #6fdc6f';
+        acceptUI.style.borderRadius = '6px';
+        acceptUI.style.top = '55%';
+        acceptUI.style.left = '40%';
+        acceptUI.style.textAlign = 'left';
+        acceptUI.innerHTML = 'Accept';
+        acceptUI.style.fontSize = '35px';
+        $(acceptUI).hover(
+        function onMouseEnter() {
+            this.style.backgroundColor = '#2db92d';
+            this.style.border = '5px solid #2db92d';
+        },
+        function onMouseLeave() {
+            this.style.backgroundColor = '#6fdc6f';
+            this.style.border = '5px solid #6fdc6f';
+        });
+        acceptUI.title = 'Accept';
+        matchDiv.appendChild(acceptUI);
+        document.body.appendChild(matchDiv);
+
+        acceptUI.addEventListener('click', function() {
+          var topicDiv = document.createElement('div');
+          var topic = new TopicsView(topicDiv, map);
+          topicDiv.index = 30;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].push(topicDiv);
+        });
+
+        var declineUI = document.createElement('div');
+        declineUI.style.display = 'absolute';
+        declineUI.style.position = 'fixed';
+        declineUI.style.color = 'white';
+        declineUI.style.backgroundColor = '#ff3333';
+        declineUI.style.border = '5px solid #ff3333';
+        declineUI.style.borderRadius = '6px';
+        declineUI.style.top = '55%';
+        declineUI.style.left = '55%';
+        declineUI.style.textAlign = 'left';
+        declineUI.innerHTML = 'Decline';
+        declineUI.style.fontSize = '35px';
+        $(declineUI).hover(
+        function onMouseEnter() {
+            this.style.backgroundColor = '#b30000';
+            this.style.border = '5px solid #b30000';
+        },
+        function onMouseLeave() {
+            this.style.backgroundColor = '#ff3333';
+            this.style.border = '5px solid #ff3333';
+        });
+        acceptUI.title = 'Decline';
+        matchDiv.appendChild(declineUI);
+        document.body.appendChild(matchDiv);
+      }
+
+      function MatchClick() {
+        var blurMapDiv = document.createElement('div');
+        var blur = new BlurMap(blurMapDiv, map);
+        blurMapDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(blurMapDiv);
+
+        var matchDiv = document.createElement('div');
+        var view = new MatchView(matchDiv, map);
+        console.log(view);
+        view.index = 2;
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(view[0]);
+      }
+
       function CenterControl(controlDiv, map) {
         var controlUI = document.createElement('div');
         controlUI.style.backgroundColor = '#3DB4CF';
@@ -365,7 +534,7 @@
           map.controls[google.maps.ControlPosition.TOP_LEFT].push(blurMapDiv);
 
           var badgesViewDiv = document.createElement('div');
-          var badges = new BadgesView(badgesViewDiv, map);
+          var badges = new MatchView(badgesViewDiv, map);
           badgesViewDiv.index = 9999;
           map.controls[google.maps.ControlPosition.TOP_CENTER].push(badgesViewDiv);
         });
@@ -419,7 +588,6 @@
         'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
       }
-
     </script>
     
     <!-- <script async defer
