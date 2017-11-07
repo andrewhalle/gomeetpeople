@@ -20,6 +20,7 @@ class User(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     matched_id = db.Column(db.Integer)
+    rating = db.Column(db.String(20))
 
     def __repr__(self):
         return "<User: %r>" % self.username
