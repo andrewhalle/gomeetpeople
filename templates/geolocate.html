@@ -452,10 +452,25 @@
         document.body.appendChild(matchDiv);
 
         acceptUI.addEventListener('click', function() {
+          matchDiv.style.visibility = 'hidden';
+
           var topicDiv = document.createElement('div');
           var topic = new TopicsView(topicDiv, map);
           topicDiv.index = 30;
           map.controls[google.maps.ControlPosition.TOP_CENTER].push(topicDiv);
+        });
+
+
+        blurUI.addEventListener('click', function() {
+          var blurMapDiv = document.createElement('div');
+          var blur = new BlurMap(blurMapDiv, map);
+          blurMapDiv.index = 1;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].pop(blurMapDiv);
+
+          var badgesViewDiv = document.createElement('div');
+          var badges = new BadgesView(badgesViewDiv, map);
+          badgesViewDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].pop(badgesViewDiv);
         });
 
         var declineUI = document.createElement('div');
