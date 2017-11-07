@@ -47,7 +47,7 @@ def start_matcher_and_sanitizer():
 
             active_users = User.query.filter_by(active=True).all()
             for user in active_users:
-                if user.matched_id != None:
+                if user.matched_id == None:
                     closest_user = min(active_users, key=lambda u: u.distance(user))
                     if closest_user.distance(user) < 5: # TODO replace with dynamic matching radius
                         user.matched_id = closest_user.id
@@ -66,6 +66,11 @@ def index():
     if session.get("logged_in"):
         return render_template("geolocate.html")
     else:
+        curr_user = User.query.filter_by(username=session.get("username")).first()
+        curr_user.active = True
+        curr_user.last_request = datetime.datetime.now()
+        db.session.add(curr_user)
+        db.session.commit()
         return redirect(url_for("login"))
 
 @app.route("/login", methods=["GET", "POST"])
@@ -92,6 +97,7 @@ def api_location():
         curr_user.latitude = request.form["latitude"]
         curr_user.longitude = request.form["longitude"]
         curr_user.last_request = datetime.datetime.now()
+        curr_user.active = True
         db.session.add(curr_user)
         db.session.commit()
         return True
@@ -103,6 +109,9 @@ def api_index():
     if session.get("logged_in"):
         curr_user = User.query.filter_by(username=session.get("username")).first()
         curr_user.last_request = datetime.datetime.now()
+        curr_user.active = True
+        db.session.add(curr_user)
+        db.session.commit()
         if curr_user.matched_id:
             matched_user = User.query.filter_by(id=curr_user.matched_id).first()
             response = {"type":"matchedUser", "username": matched_user.username, "lat": matched_user.latitude, "long": matched_user.longitude}
