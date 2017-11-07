@@ -39,10 +39,11 @@
     crossorigin="anonymous"></script>
 
     <script>
-      var map, infoWindow;
+      var map, infoWindow, matchedInforWindow;
       var berkeley = {lat: 37.871853, lng: -122.258423};
       var userlat;
       var userlng;
+      var matchCount = 0;
 
       function updateData() {
         var feedback = $.ajax({
@@ -66,16 +67,20 @@
                 }
               };
             } else if (input.type == "matchedUser") {
+              matchCount = matchCount + 1;
+              console.log(matchCount);
               var username = input.username;
               var pos = {
                 lat: input.lat,
                 lng: input.long
               };
-
-              infoWindow = new google.maps.InfoWindow;
-              infoWindow.setPosition(pos);
-              infoWindow.setContent('<h1 id="badges" color="#3DB4CF">' + username.charAt(0).toUpperCase() + username.slice(1) + '</h1><p>' + input.rating + '</p><button onclick="MatchClick()">Connect!</button>');
-              infoWindow.open(map);
+              if (matchCount < 2) {
+                console.log("in info");
+                matchedInforWindow = new google.maps.InfoWindow;
+                matchedInforWindow.setPosition(pos);
+                matchedInforWindow.setContent('<h1 id="badges" color="#3DB4CF">' + username.charAt(0).toUpperCase() + username.slice(1) + '</h1><p>' + input.rating + '</p><button onclick="MatchClick()">Connect!</button>');
+                matchedInforWindow.open(map);
+              }
             }
           },
           error: function(data) {
@@ -97,15 +102,14 @@
         blurDiv.appendChild(blurUI);
 
         blurUI.addEventListener('click', function() {
-          var blurMapDiv = document.createElement('div');
-          var blur = new BlurMap(blurMapDiv, map);
-          blurMapDiv.index = 1;
-          map.controls[google.maps.ControlPosition.TOP_LEFT].pop(blurMapDiv);
+          blurDiv.style.visibility = 'hidden';
+          map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
+          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
 
-          var badgesViewDiv = document.createElement('div');
-          var badges = new BadgesView(badgesViewDiv, map);
-          badgesViewDiv.index = 2;
-          map.controls[google.maps.ControlPosition.TOP_CENTER].pop(badgesViewDiv);
+          var controlDiv = document.createElement('div');
+          var badge = new CenterControl(controlDiv, map);
+          controlDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
         });
       }
 
@@ -114,23 +118,56 @@
         var badge1 = document.createElement('IMG');
         badge1.style.display = 'fixed';
         badge1.style.padding = '100px 0px 0px 0px'; 
-        badge1.setAttribute("src", "1.png");
+        badge1.setAttribute("src", "../static/1.png");
         badge1.setAttribute("width", "32%");
         badgesDiv.appendChild(badge1);
+
+        badge1.addEventListener('click', function() {
+          badgesDiv.style.visibility = 'hidden';
+          map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
+          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+
+          var controlDiv = document.createElement('div');
+          var badge = new CenterControl(controlDiv, map);
+          controlDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+        });
 
         var badge2 = document.createElement('IMG');
         badge2.style.display = 'fixed';
         badge2.style.padding = '100px 0px 0px 0px'; 
-        badge2.setAttribute("src", "2.png");
+        badge2.setAttribute("src", "../static/2.png");
         badge2.setAttribute("width", "32%");
         badgesDiv.appendChild(badge2);
+
+        badge2.addEventListener('click', function() {
+          badgesDiv.style.visibility = 'hidden';
+          map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
+          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+
+          var controlDiv = document.createElement('div');
+          var badge = new CenterControl(controlDiv, map);
+          controlDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+        });
 
         var badge3 = document.createElement('IMG');
         badge3.style.display = 'fixed';
         badge3.style.padding = '100px 0px 0px 0px'; 
-        badge3.setAttribute("src", "2.png");
+        badge3.setAttribute("src", "../static/4.png");
         badge3.setAttribute("width", "32%");
         badgesDiv.appendChild(badge3);
+
+        badge3.addEventListener('click', function() {
+          badgesDiv.style.visibility = 'hidden';
+          map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
+          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+
+          var controlDiv = document.createElement('div');
+          var badge = new CenterControl(controlDiv, map);
+          controlDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+        });
       }
 
       function NewBadge(newBadgeDiv, map) {
@@ -149,15 +186,17 @@
         nbUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
         nbUI.style.textAlign = 'center';
         newBadgeDiv.appendChild(nbUI);
+        document.body.appendChild(newBadgeDiv);
 
         var badge = document.createElement('IMG');
         badge.style.position = 'fixed';
         badge.style.top = "25%";
         badge.style.left = "25%";
         badge.style.padding = '50px 100px 100px 150px';
-        badge.setAttribute("src", "3.png");
+        badge.setAttribute("src", "../static/3.png");
         badge.setAttribute("width", "32%");
         newBadgeDiv.appendChild(badge);
+        document.body.appendChild(newBadgeDiv);
       }
 
       function TopicsView(topicViewDiv, map) {
@@ -218,7 +257,7 @@
         article1.style.border = '2px solid #ffd24d';
         article1.style.borderRadius = '5px';        // 
         article1.style.marginTop = '9px';
-        article1.innerHTML = 'Article #1';
+        article1.innerHTML = 'Article #1 - An article that Andrew liked.';
         article1.style.textAlign = 'center';
         article1.style.cursor = 'pointer';
         article1.style.color = 'white';
@@ -254,7 +293,7 @@
         article2.style.border = '2px solid #ffd24d';
         article2.style.borderRadius = '5px';        // 
         article2.style.marginTop = '9px';
-        article2.innerHTML = 'Article #2';
+        article2.innerHTML = 'Article #2 - An article that you liked.';
         article2.style.textAlign = 'center';
         article2.style.color = 'white';
         article2.style.fontFamily = 'Roboto,Arial,sans-serif';
@@ -263,8 +302,8 @@
         article2.style.cursor = 'pointer';
         article2.style.paddingLeft = '5px';
         article2.style.paddingRight = '5px';
-        article2.style.top = '50%';
-        article2.style.left = '41%';
+        article2.style.top = '60%';
+        article2.style.left = '30%';
         $(article2).hover(
         function onMouseEnter() {
             this.style.backgroundColor = 'white';
@@ -299,8 +338,8 @@
         doneTalking.style.paddingLeft = '5px';
         doneTalking.style.cursor = 'pointer';
         doneTalking.style.paddingRight = '5px';
-        doneTalking.style.top = '60%';
-        doneTalking.style.left = '45%';
+        doneTalking.style.top = '70%';
+        doneTalking.style.left = '50%';
         $(doneTalking).hover(
         function onMouseEnter() {
             this.style.backgroundColor = 'white';
@@ -316,8 +355,12 @@
         topicViewDiv.appendChild(doneTalking);
 
         doneTalking.addEventListener('click', function() {
-          
-        });
+          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+          var ratingDiv = document.createElement('div');
+          var rating = new RatingView(ratingDiv, map);
+          rating.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].push(ratingDiv[0]);
+          });
       }
 
       function StarFill(name, i) {
@@ -351,6 +394,7 @@
         ratingUI.style.textAlign = 'center';
         ratingUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
         ratingDiv.appendChild(ratingUI);
+        document.body.appendChild(ratingDiv);
         var ratingstar1 = document.createElement('div');
         var ratingstar2 = document.createElement('div');
         var ratingstar3 = document.createElement('div');
@@ -369,6 +413,7 @@
           name.style.left = leftPositions[i];
           name.addEventListener('click', StarFill(name, leftPositions[i]));
           ratingDiv.appendChild(name);
+          document.body.appendChild(ratingDiv);
         }
         var submitUI = document.createElement('div');
         submitUI.style.display = 'absolute';
@@ -380,6 +425,7 @@
         submitUI.style.top = '55%';
         submitUI.style.left = '47%';
         submitUI.style.textAlign = 'left';
+        submitUI.style.cursor = 'pointer';
         submitUI.innerHTML = 'Submit';
         submitUI.style.fontSize = '35px';
         $(submitUI).hover(
@@ -393,6 +439,20 @@
         });
         submitUI.title = 'Submit';
         ratingDiv.appendChild(submitUI);
+        document.body.appendChild(ratingDiv);
+        submitUI.addEventListener('click', function() {
+          ratingDiv.style.visibility = 'hidden';
+          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+          var newbadgeDiv = document.createElement('div');
+          var nbview = new NewBadge(newbadgeDiv, map);
+
+          google.maps.event.clearInstanceListeners(matchedInforWindow);
+          matchedInforWindow.close();
+          matchedInforWindow = null;
+
+          newbadgeDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(newbadgeDiv[0]);
+        });
       }
 
       function MatchView(matchDiv, map) {
@@ -434,6 +494,7 @@
         acceptUI.style.border = '5px solid #6fdc6f';
         acceptUI.style.borderRadius = '6px';
         acceptUI.style.top = '55%';
+        acceptUI.style.cursor = 'pointer';
         acceptUI.style.left = '40%';
         acceptUI.style.textAlign = 'left';
         acceptUI.innerHTML = 'Accept';
@@ -451,32 +512,11 @@
         matchDiv.appendChild(acceptUI);
         document.body.appendChild(matchDiv);
 
-        acceptUI.addEventListener('click', function() {
-          matchDiv.style.visibility = 'hidden';
-
-          var topicDiv = document.createElement('div');
-          var topic = new TopicsView(topicDiv, map);
-          topicDiv.index = 30;
-          map.controls[google.maps.ControlPosition.TOP_CENTER].push(topicDiv);
-        });
-
-
-        blurUI.addEventListener('click', function() {
-          var blurMapDiv = document.createElement('div');
-          var blur = new BlurMap(blurMapDiv, map);
-          blurMapDiv.index = 1;
-          map.controls[google.maps.ControlPosition.TOP_LEFT].pop(blurMapDiv);
-
-          var badgesViewDiv = document.createElement('div');
-          var badges = new BadgesView(badgesViewDiv, map);
-          badgesViewDiv.index = 2;
-          map.controls[google.maps.ControlPosition.TOP_CENTER].pop(badgesViewDiv);
-        });
-
         var declineUI = document.createElement('div');
         declineUI.style.display = 'absolute';
         declineUI.style.position = 'fixed';
         declineUI.style.color = 'white';
+        declineUI.style.cursor = 'pointer';
         declineUI.style.backgroundColor = '#ff3333';
         declineUI.style.border = '5px solid #ff3333';
         declineUI.style.borderRadius = '6px';
@@ -497,6 +537,27 @@
         acceptUI.title = 'Decline';
         matchDiv.appendChild(declineUI);
         document.body.appendChild(matchDiv);
+
+        acceptUI.addEventListener('click', function() {
+          matchDiv.style.visibility = 'hidden';
+
+          var topicDiv = document.createElement('div');
+          var topic = new TopicsView(topicDiv, map);
+          topicDiv.index = 30;
+          map.controls[google.maps.ControlPosition.TOP_CENTER].push(topicDiv);
+        });
+
+        declineUI.addEventListener('click', function() {
+          matchDiv.style.visibility = 'hidden';
+          map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
+          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+
+          var centerControlDiv = document.createElement('div');
+          var centerControl = new CenterControl(centerControlDiv, map);
+
+          centerControlDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(centerControlDiv);
+        });
       }
 
       function MatchClick() {
@@ -507,7 +568,6 @@
 
         var matchDiv = document.createElement('div');
         var view = new MatchView(matchDiv, map);
-        console.log(view);
         view.index = 2;
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(view[0]);
       }
@@ -549,8 +609,8 @@
           map.controls[google.maps.ControlPosition.TOP_LEFT].push(blurMapDiv);
 
           var badgesViewDiv = document.createElement('div');
-          var badges = new MatchView(badgesViewDiv, map);
-          badgesViewDiv.index = 9999;
+          var badges = new BadgesView(badgesViewDiv, map);
+          badgesViewDiv.index = 2;
           map.controls[google.maps.ControlPosition.TOP_CENTER].push(badgesViewDiv);
         });
       }
@@ -604,10 +664,6 @@
         infoWindow.open(map);
       }
     </script>
-    
-    <!-- <script async defer
-        src= "https://maps.googleapis.com/maps/api/directions/json?origin=userlatlng&destination=pairlatlng&mode=walking&key=AIzaSyAyzs5GXiEQzGtFBvzvkxkWs4i1KqXChLE">
-    </script> -->
     
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzs5GXiEQzGtFBvzvkxkWs4i1KqXChLE&callback=initMap">
