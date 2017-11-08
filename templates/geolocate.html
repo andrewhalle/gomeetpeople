@@ -78,7 +78,7 @@
                 console.log("in info");
                 matchedInforWindow = new google.maps.InfoWindow;
                 matchedInforWindow.setPosition(pos);
-                matchedInforWindow.setContent('<h1 id="badges" color="#3DB4CF">' + username.charAt(0).toUpperCase() + username.slice(1) + '</h1><p>' + input.rating + '</p><button onclick="MatchClick()">Connect!</button>');
+                matchedInforWindow.setContent('<h1 id="badges" color="#3DB4CF">' + username.charAt(0).toUpperCase() + username.slice(1) + '</h1><p>' + 'Rating: 4.9 / 5.0' + '</p><button onclick="MatchClick()">Connect!</button>');
                 matchedInforWindow.open(map);
               }
             }
@@ -104,8 +104,8 @@
         blurUI.addEventListener('click', function() {
           blurDiv.style.visibility = 'hidden';
           map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
-          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
-
+          // map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+          console.log('click');
           var controlDiv = document.createElement('div');
           var badge = new CenterControl(controlDiv, map);
           controlDiv.index = 2;
@@ -125,7 +125,6 @@
         badge1.addEventListener('click', function() {
           badgesDiv.style.visibility = 'hidden';
           map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
-          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
 
           var controlDiv = document.createElement('div');
           var badge = new CenterControl(controlDiv, map);
@@ -143,7 +142,6 @@
         badge2.addEventListener('click', function() {
           badgesDiv.style.visibility = 'hidden';
           map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
-          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
 
           var controlDiv = document.createElement('div');
           var badge = new CenterControl(controlDiv, map);
@@ -161,7 +159,6 @@
         badge3.addEventListener('click', function() {
           badgesDiv.style.visibility = 'hidden';
           map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
-          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
 
           var controlDiv = document.createElement('div');
           var badge = new CenterControl(controlDiv, map);
@@ -197,6 +194,16 @@
         badge.setAttribute("width", "32%");
         newBadgeDiv.appendChild(badge);
         document.body.appendChild(newBadgeDiv);
+
+        badge.addEventListener('click', function() {
+          newBadgeDiv.style.visibility = 'hidden';
+          map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
+
+          var controlDiv = document.createElement('div');
+          var badge = new CenterControl(controlDiv, map);
+          controlDiv.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+        });
       }
 
       function TopicsView(topicViewDiv, map) {
@@ -355,11 +362,11 @@
         topicViewDiv.appendChild(doneTalking);
 
         doneTalking.addEventListener('click', function() {
-          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+          topicViewDiv.style.visibility = 'hidden';
           var ratingDiv = document.createElement('div');
-          var rating = new RatingView(ratingDiv, map);
-          rating.index = 2;
-          map.controls[google.maps.ControlPosition.TOP_CENTER].push(ratingDiv[0]);
+          var rating = RatingView(ratingDiv, map);
+          // rating.index = 2;
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(ratingDiv[0]);
           });
       }
 
@@ -394,7 +401,7 @@
         ratingUI.style.textAlign = 'center';
         ratingUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
         ratingDiv.appendChild(ratingUI);
-        document.body.appendChild(ratingDiv);
+        // document.body.appendChild(ratingDiv);
         var ratingstar1 = document.createElement('div');
         var ratingstar2 = document.createElement('div');
         var ratingstar3 = document.createElement('div');
@@ -413,7 +420,7 @@
           name.style.left = leftPositions[i];
           name.addEventListener('click', StarFill(name, leftPositions[i]));
           ratingDiv.appendChild(name);
-          document.body.appendChild(ratingDiv);
+          // document.body.appendChild(ratingDiv);
         }
         var submitUI = document.createElement('div');
         submitUI.style.display = 'absolute';
@@ -442,9 +449,9 @@
         document.body.appendChild(ratingDiv);
         submitUI.addEventListener('click', function() {
           ratingDiv.style.visibility = 'hidden';
-          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+          //map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
           var newbadgeDiv = document.createElement('div');
-          var nbview = new NewBadge(newbadgeDiv, map);
+          var nbview = NewBadge(newbadgeDiv, map);
 
           google.maps.event.clearInstanceListeners(matchedInforWindow);
           matchedInforWindow.close();
@@ -550,7 +557,6 @@
         declineUI.addEventListener('click', function() {
           matchDiv.style.visibility = 'hidden';
           map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
-          map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
 
           var centerControlDiv = document.createElement('div');
           var centerControl = new CenterControl(centerControlDiv, map);
@@ -569,7 +575,7 @@
         var matchDiv = document.createElement('div');
         var view = new MatchView(matchDiv, map);
         view.index = 2;
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(view[0]);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(view[0]);
       }
 
       function CenterControl(controlDiv, map) {
@@ -611,7 +617,7 @@
           var badgesViewDiv = document.createElement('div');
           var badges = new BadgesView(badgesViewDiv, map);
           badgesViewDiv.index = 2;
-          map.controls[google.maps.ControlPosition.TOP_CENTER].push(badgesViewDiv);
+          map.controls[google.maps.ControlPosition.TOP_LEFT].push(badgesViewDiv);
         });
       }
 
