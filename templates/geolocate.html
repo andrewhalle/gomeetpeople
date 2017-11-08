@@ -29,9 +29,7 @@
   </head>
   
   <body>
-    <div class="wrapper">
-      <div id="map" style='width: 100%; height: 100%;'></div>
-    </div>
+    <div id="map" style='width: 100%; height: 100%;'></div>
 
     <script
     src="http://code.jquery.com/jquery-3.2.1.js"
@@ -50,12 +48,8 @@
             type: 'GET',
             url: 'http://localhost:5000/api/',
           success: function (data) {
-            console.log(data); 
             var input = JSON.parse(data);
-            console.log(input.type);
             if (input.type == "userlist") {            
-              console.log(input);
-              console.log(input.users);
               for (i = 0; i < input.users.length; i++) {
                 if (input.users[i].lat != null && input.users[i].long != null) {
                   var latlng = new google.maps.LatLng(input.users[i].lat, input.users[i].long);
@@ -68,14 +62,12 @@
               };
             } else if (input.type == "matchedUser") {
               matchCount = matchCount + 1;
-              console.log(matchCount);
               var username = input.username;
               var pos = {
                 lat: input.lat,
                 lng: input.long
               };
               if (matchCount < 2) {
-                console.log("in info");
                 matchedInforWindow = new google.maps.InfoWindow;
                 matchedInforWindow.setPosition(pos);
                 matchedInforWindow.setContent('<h1 id="badges" color="#3DB4CF">' + username.charAt(0).toUpperCase() + username.slice(1) + '</h1><p>' + 'Rating: 4.9 / 5.0' + '</p><button onclick="MatchClick()">Connect!</button>');
@@ -104,8 +96,6 @@
         blurUI.addEventListener('click', function() {
           blurDiv.style.visibility = 'hidden';
           map.controls[google.maps.ControlPosition.TOP_LEFT].clear();
-          // map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
-          console.log('click');
           var controlDiv = document.createElement('div');
           var badge = new CenterControl(controlDiv, map);
           controlDiv.index = 2;
@@ -365,7 +355,6 @@
           topicViewDiv.style.visibility = 'hidden';
           var ratingDiv = document.createElement('div');
           var rating = RatingView(ratingDiv, map);
-          // rating.index = 2;
           map.controls[google.maps.ControlPosition.TOP_LEFT].push(ratingDiv[0]);
           });
       }
@@ -401,13 +390,11 @@
         ratingUI.style.textAlign = 'center';
         ratingUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
         ratingDiv.appendChild(ratingUI);
-        // document.body.appendChild(ratingDiv);
         var ratingstar1 = document.createElement('div');
         var ratingstar2 = document.createElement('div');
         var ratingstar3 = document.createElement('div');
         var ratingstar4 = document.createElement('div');
         var ratingstar5 = document.createElement('div');
-        //iterates through a list of five stars to display
         var stars = [ratingstar1, ratingstar2, ratingstar3, ratingstar4, ratingstar5];
         var leftPositions = ['35%', '42%', '49%', '56%', '63%'];
         for (var i = 0; i < 5; i++) {
@@ -420,7 +407,6 @@
           name.style.left = leftPositions[i];
           name.addEventListener('click', StarFill(name, leftPositions[i]));
           ratingDiv.appendChild(name);
-          // document.body.appendChild(ratingDiv);
         }
         var submitUI = document.createElement('div');
         submitUI.style.display = 'absolute';
@@ -449,7 +435,6 @@
         document.body.appendChild(ratingDiv);
         submitUI.addEventListener('click', function() {
           ratingDiv.style.visibility = 'hidden';
-          //map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
           var newbadgeDiv = document.createElement('div');
           var nbview = NewBadge(newbadgeDiv, map);
 
@@ -642,7 +627,6 @@
             var myMarker = new google.maps.Marker({
               type: 'me',
               position: latlng,
-              // icon: 'my_position.png',
               map: map
             });
 
@@ -651,7 +635,6 @@
             handleLocationError(true, myMarker, map.getCenter());
           });
         } else {
-          // Browser doesn't support Geolocation
           handleLocationError(false, myMarker, map.getCenter());
         }
 
@@ -672,7 +655,7 @@
     </script>
     
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzs5GXiEQzGtFBvzvkxkWs4i1KqXChLE&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD3OwxEYrKSCedzsKMyd2RQLNVLzRnMueI&callback=initMap">
     </script>
   </body>
 </html>
