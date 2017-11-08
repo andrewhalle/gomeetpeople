@@ -3,8 +3,9 @@
   
   <head>
     <title>Go Meet People</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3mobile.css">
     <link rel="stylesheet" href="../static/style.css">
     <style>
       #map {
@@ -163,13 +164,12 @@
         nbUI.style.position = 'fixed';
         nbUI.style.color = 'white';
         nbUI.style.borderRadius = '10px';  
-        nbUI.style.padding = '0px 100px 100px 100px';
-        nbUI.style.width = '40%';
-        nbUI.style.height = '40%';
-        nbUI.style.top = '25%';
-        nbUI.style.left = '25%';
+        nbUI.style.width = '70%';
+        nbUI.style.height = '60%';
+        nbUI.style.top = '15%';
+        nbUI.style.left = '15%';
         nbUI.innerHTML = 'NEW BADGE!';
-        nbUI.style.fontSize = '48px';
+        nbUI.style.fontSize = '36px';
         nbUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
         nbUI.style.textAlign = 'center';
         newBadgeDiv.appendChild(nbUI);
@@ -177,9 +177,8 @@
 
         var badge = document.createElement('IMG');
         badge.style.position = 'fixed';
-        badge.style.top = "25%";
+        badge.style.top = "45%";
         badge.style.left = "25%";
-        badge.style.padding = '50px 100px 100px 150px';
         badge.setAttribute("src", "../static/3.png");
         badge.setAttribute("width", "32%");
         newBadgeDiv.appendChild(badge);
@@ -202,13 +201,12 @@
         topicsUI.style.position = 'fixed';
         topicsUI.style.color = 'white';
         topicsUI.style.borderRadius = '10px';  
-        topicsUI.style.padding = '10px 100px 100px 100px';
-        topicsUI.style.width = '40%';
-        topicsUI.style.height = '40%';
-        topicsUI.style.top = '25%';
-        topicsUI.style.left = '25%';
+        topicsUI.style.width = '70%';
+        topicsUI.style.height = '70%';
+        topicsUI.style.top = '15%';
+        topicsUI.style.left = '15%';
         topicsUI.innerHTML = 'Topic';
-        topicsUI.style.fontSize = '48px';
+        topicsUI.style.fontSize = '36px';
         topicsUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
         topicsUI.style.backgroundColor = '#3DB4CF';
         topicsUI.style.textAlign = 'center';
@@ -218,10 +216,10 @@
         agreeText.style.display = 'absolute';
         agreeText.style.position = 'fixed';
         agreeText.style.color = 'white';
-        agreeText.style.top = '25%';
-        agreeText.style.left = '30%';
-        agreeText.style.fontSize = '20px';
-        agreeText.innerHTML = '<br><br><br>You and Andrew both agree on <u>abortion laws</u>.';
+        agreeText.style.top = '15%';
+        agreeText.style.left = '17%';
+        agreeText.style.fontSize = '16px';
+        agreeText.innerHTML = '<br><br><br>You and Andrew both agree on<br><u>abortion laws</u>.';
         agreeText.style.textAlign = 'center';
         topicViewDiv.appendChild(agreeText);
 
@@ -229,21 +227,10 @@
         disagreeText.style.display = 'absolute';
         disagreeText.style.position = 'fixed';
         disagreeText.style.color = 'white';
-        disagreeText.style.top = '30%';
-        disagreeText.style.left = '30%';
-        disagreeText.style.fontSize = '20px';
-        disagreeText.innerHTML = '<br><br><br>However you both agree on <u>immigration laws</u>.';
-        disagreeText.style.textAlign = 'center';
-        topicViewDiv.appendChild(disagreeText);
-
-        var disagreeText = document.createElement('p');
-        disagreeText.style.display = 'absolute';
-        disagreeText.style.position = 'fixed';
-        disagreeText.style.color = 'white';
-        disagreeText.style.top = '30%';
-        disagreeText.style.left = '30%';
-        disagreeText.style.fontSize = '20px';
-        disagreeText.innerHTML = '<br><br><br>However you both agree on <u>immigration laws</u>.';
+        disagreeText.style.top = '25%';
+        disagreeText.style.left = '17%';
+        disagreeText.style.fontSize = '16px';
+        disagreeText.innerHTML = '<br><br><br>However you both disagree on <br><u>immigration laws</u>.';
         disagreeText.style.textAlign = 'center';
         topicViewDiv.appendChild(disagreeText);
 
@@ -264,7 +251,7 @@
         article1.style.paddingLeft = '5px';
         article1.style.paddingRight = '5px';
         article1.style.top = '50%';
-        article1.style.left = '30%';
+        article1.style.left = '20%';
         $(article1).hover(
         function onMouseEnter() {
             this.style.backgroundColor = 'white';
@@ -300,7 +287,7 @@
         article2.style.paddingLeft = '5px';
         article2.style.paddingRight = '5px';
         article2.style.top = '60%';
-        article2.style.left = '30%';
+        article2.style.left = '20%';
         $(article2).hover(
         function onMouseEnter() {
             this.style.backgroundColor = 'white';
@@ -336,7 +323,7 @@
         doneTalking.style.cursor = 'pointer';
         doneTalking.style.paddingRight = '5px';
         doneTalking.style.top = '70%';
-        doneTalking.style.left = '50%';
+        doneTalking.style.left = '40%';
         $(doneTalking).hover(
         function onMouseEnter() {
             this.style.backgroundColor = 'white';
@@ -379,13 +366,12 @@
         ratingUI.style.position = 'fixed';
         ratingUI.style.color = 'white';
         ratingUI.style.borderRadius = '10px';
-        ratingUI.style.padding = '10px 100px 100px 100px';
-        ratingUI.style.width = '40%';
-        ratingUI.style.height = '45%';
-        ratingUI.style.top = '20%';
-        ratingUI.style.left = '25%';
-        ratingUI.innerHTML = 'How was your chat with Andrew?';
-        ratingUI.style.fontSize = '40px';
+        ratingUI.style.width = '70%';
+        ratingUI.style.height = '60%';
+        ratingUI.style.top = '15%';
+        ratingUI.style.left = '15%';
+        ratingUI.innerHTML = 'Rate Andrew';
+        ratingUI.style.fontSize = '36px';
         ratingUI.style.backgroundColor = '#3DB4CF';
         ratingUI.style.textAlign = 'center';
         ratingUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
@@ -396,10 +382,10 @@
         var ratingstar4 = document.createElement('div');
         var ratingstar5 = document.createElement('div');
         var stars = [ratingstar1, ratingstar2, ratingstar3, ratingstar4, ratingstar5];
-        var leftPositions = ['35%', '42%', '49%', '56%', '63%'];
+        var leftPositions = ['20%', '30%', '40%', '50%', '60%'];
         for (var i = 0; i < 5; i++) {
           var name = stars[i];
-          name.className += "fa fa-star fa-5x";
+          name.className += "fa fa-star fa-2x";
           name.style.color = "white";
           name.style.display = 'absolute';
           name.style.position = 'fixed';
@@ -416,11 +402,11 @@
         submitUI.style.border = '8px solid #ffd24d';
         submitUI.style.borderRadius = '6px';
         submitUI.style.top = '55%';
-        submitUI.style.left = '47%';
+        submitUI.style.left = '35%';
         submitUI.style.textAlign = 'left';
         submitUI.style.cursor = 'pointer';
         submitUI.innerHTML = 'Submit';
-        submitUI.style.fontSize = '35px';
+        submitUI.style.fontSize = '16px';
         $(submitUI).hover(
         function onMouseEnter() {
             this.style.backgroundColor = '#6fdc6f';
@@ -453,13 +439,12 @@
         matchUI.style.position = 'fixed';
         matchUI.style.color = 'white';
         matchUI.style.borderRadius = '10px';
-        matchUI.style.padding = '10px 100px 100px 100px';
-        matchUI.style.width = '40%';
-        matchUI.style.height = '20%';
-        matchUI.style.top = '30%';
-        matchUI.style.left = '25%';
+        matchUI.style.width = '70%';
+        matchUI.style.height = '50%';
+        matchUI.style.top = '25%';
+        matchUI.style.left = '15%';
         matchUI.innerHTML = 'Matched!';
-        matchUI.style.fontSize = '48px';
+        matchUI.style.fontSize = '36px';
         matchUI.style.backgroundColor = '#3DB4CF';
         matchUI.style.textAlign = 'center';
         matchUI.style.textShadow = '0px 3px 0px #b2a98f, 0px 4px 10px rgba(0,0,0,0.15), 0px 10px 2px rgba(0,0,0,0.1), 0px 34px 30px rgba(0,0,0,0.1)';
@@ -467,12 +452,12 @@
         document.body.appendChild(matchDiv);
 
         var matchPersonInfo = document.createElement('p');
-        matchPersonInfo.style.fontSize = '40px';
+        matchPersonInfo.style.fontSize = '24px';
         matchPersonInfo.style.position = 'fixed';
         matchPersonInfo.style.display = 'absolute';
         matchPersonInfo.style.color = 'white';
         matchPersonInfo.style.top = '30%';
-        matchPersonInfo.style.left = '43%';
+        matchPersonInfo.style.left = '23%';
         matchPersonInfo.style.textAlign = 'center';
         matchPersonInfo.innerHTML = '<br>Andrew: 10 ft';
         matchDiv.appendChild(matchPersonInfo);
@@ -487,10 +472,10 @@
         acceptUI.style.borderRadius = '6px';
         acceptUI.style.top = '55%';
         acceptUI.style.cursor = 'pointer';
-        acceptUI.style.left = '40%';
+        acceptUI.style.left = '23%';
         acceptUI.style.textAlign = 'left';
         acceptUI.innerHTML = 'Accept';
-        acceptUI.style.fontSize = '35px';
+        acceptUI.style.fontSize = '16px';
         $(acceptUI).hover(
         function onMouseEnter() {
             this.style.backgroundColor = '#2db92d';
@@ -516,7 +501,7 @@
         declineUI.style.left = '55%';
         declineUI.style.textAlign = 'left';
         declineUI.innerHTML = 'Decline';
-        declineUI.style.fontSize = '35px';
+        declineUI.style.fontSize = '16px';
         $(declineUI).hover(
         function onMouseEnter() {
             this.style.backgroundColor = '#b30000';
